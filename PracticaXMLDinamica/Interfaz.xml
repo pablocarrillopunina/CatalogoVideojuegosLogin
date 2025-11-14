@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Interfaz>
+
+	<!-- ===========================
+        1. MENÚ SUPERIOR
+       =========================== -->
+	<MenuStrip nombre="menuPrincipal">
+		<MenuItem texto="Archivo">
+			<MenuItem texto="Guardar" accion="guardar"/>
+			<MenuItem texto="Salir" accion="salir"/>
+		</MenuItem>
+
+		<MenuItem texto="Ayuda">
+			<MenuItem texto="Acerca de" accion="acerca"/>
+		</MenuItem>
+	</MenuStrip>
+
+
+	<!-- ===========================
+        2. LABEL PRINCIPAL
+       =========================== -->
+	<Control tipo="Label" nombre="lblTitulo" texto="BIENVENIDO A LA APLICACION"
+             foreColor="#FF0000"
+             x="200" y="80" width="350" height="30"/>
+
+
+	<!-- ===========================
+        3. BOTONES CRUD
+       =========================== -->
+	<Control tipo="Button" nombre="btnAñadir" texto="Añadir"
+             x="260" y="130" width="140" height="40"/>
+
+	<Control tipo="Button" nombre="btnEditar" texto="Editar"
+             x="260" y="180" width="140" height="40"/>
+
+	<Control tipo="Button" nombre="btnEliminar" texto="Eliminar"
+             x="260" y="230" width="140" height="40"/>
+
+
+	<!-- ===========================
+        4. PANEL CON CONTROLES ANIDADOS
+       =========================== -->
+	<Panel nombre="pnlOpciones" x="30" y="120" width="220" height="160" backColor="#FFF8D8">
+
+		<Control tipo="Label" nombre="lblOpc" texto="Opciones del sistema"
+				 foreColor="#000000"
+				 x="30" y="20" width="160" height="30"/>
+
+		<Control tipo="Button" nombre="btnExportar" texto="Exportar datos"
+				 x="30" y="70" width="150" height="30"/>
+
+		<Control tipo="Button" nombre="btnImportar" texto="Importar datos"
+				 x="30" y="110" width="150" height="30"/>
+	</Panel>
+
+
+
+	<!-- ===========================
+        5. LISTA — DATAGRIDVIEW
+       =========================== -->
+	<DataGrid nombre="tablaDatos" x="160" y="300" width="350" height="180">
+
+		<Columna nombre="ID" width="50"/>
+		<Columna nombre="Nombre" width="150"/>
+		<Columna nombre="Edad" width="80"/>
+
+		<Fila>
+			<Celda columna="ID">1</Celda>
+			<Celda columna="Nombre">Pablo</Celda>
+			<Celda columna="Edad">21</Celda>
+		</Fila>
+
+		<Fila>
+			<Celda columna="ID">2</Celda>
+			<Celda columna="Nombre">Sandra</Celda>
+			<Celda columna="Edad">19</Celda>
+		</Fila>
+
+	</DataGrid>
+
+</Interfaz>
