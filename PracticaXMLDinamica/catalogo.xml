@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Catalogo>
+
+	<Videojuego id="001">
+		<Titulo>Elden Ring</Titulo>
+		<Desarrollador>FromSoftware</Desarrollador>
+		<Plataforma>PC/Consoles</Plataforma>
+		<Precio moneda="EUR">59.99</Precio>
+	</Videojuego>
+
+	<Videojuego id="002">
+		<Titulo>FIFA 2025</Titulo>
+		<Desarrollador>Electronic Arts</Desarrollador>
+		<Plataforma>PS5/Xbox Series</Plataforma>
+		<Precio moneda="EUR">39.99</Precio>
+	</Videojuego>
+
+	<Videojuego id="003">
+		<Titulo>Call of Duty</Titulo>
+		<Desarrollador>Infinity Ward</Desarrollador>
+		<Plataforma>PS5/Xbox Series/PC</Plataforma>
+		<Precio moneda="EUR">999.99</Precio>
+	</Videojuego>
+	
+	<Videojuego id="004">
+		<Titulo>FIFA 23 Ultimate Icon Edition</Titulo>
+		<Desarrollador>EA Sports</Desarrollador>
+		<Plataforma>PS5/Xbox Series</Plataforma>
+		<Precio moneda="EUR">899.99</Precio>
+	</Videojuego>
+
+
+</Catalogo>

@@ -1,82 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <Interfaz>
 
-	<!-- ===========================
-        1. MENÚ SUPERIOR
-       =========================== -->
+	<!-- MENÚ COMPLETO -->
 	<MenuStrip nombre="menuPrincipal">
+
+		<!-- Archivo -->
 		<MenuItem texto="Archivo">
 			<MenuItem texto="Guardar" accion="guardar"/>
 			<MenuItem texto="Salir" accion="salir"/>
 		</MenuItem>
 
+		<!-- Ayuda -->
 		<MenuItem texto="Ayuda">
 			<MenuItem texto="Acerca de" accion="acerca"/>
 		</MenuItem>
+
+		<!-- Nuevas opciones de navegación -->
+		<MenuItem texto="TIENDA" accion="nav"/>
+		<MenuItem texto="COMUNIDAD" accion="nav"/>
+		<MenuItem texto="SOPORTE" accion="nav"/>
+
+		<!-- PERFIL alineado a la derecha -->
+		<MenuItem texto="Mi perfil ▼">
+			<MenuItem texto="Cerrar sesión" accion="logout"/>
+			<MenuItem texto="Cerrar la aplicación" accion="exitApp"/>
+		</MenuItem>
+
 	</MenuStrip>
 
 
-	<!-- ===========================
-        2. LABEL PRINCIPAL
-       =========================== -->
-	<Control tipo="Label" nombre="lblTitulo" texto="BIENVENIDO A LA APLICACION"
-             foreColor="#FF0000"
-             x="200" y="80" width="350" height="30"/>
+	<!-- PANEL PRINCIPAL -->
+	<Panel nombre="panelPrincipal"
+		   x="0" y="40" width="820" height="320"
+		   backColor="#333333">
+
+		<!-- TÍTULO -->
+		<Control tipo="Label" nombre="lblTitulo" texto="Gestión de Catálogo de Videojuegos"
+				 x="0" y="10" width="820" height="30"/>
+
+		<!-- CAMPOS ALINEADOS -->
+
+		<Control tipo="Label" nombre="lblTituloJuego" texto="Título:"
+				 x="40" y="80" width="140" height="25"/>
+
+		<Control tipo="TextBox" nombre="txtTitulo" texto=""
+				 x="200" y="80" width="550" height="25"/>
 
 
-	<!-- ===========================
-        3. BOTONES CRUD
-       =========================== -->
-	<Control tipo="Button" nombre="btnAñadir" texto="Añadir"
-             x="260" y="130" width="140" height="40"/>
+		<Control tipo="Label" nombre="lblDesarrollador" texto="Desarrollador:"
+				 x="40" y="120" width="140" height="25"/>
 
-	<Control tipo="Button" nombre="btnEditar" texto="Editar"
-             x="260" y="180" width="140" height="40"/>
-
-	<Control tipo="Button" nombre="btnEliminar" texto="Eliminar"
-             x="260" y="230" width="140" height="40"/>
+		<Control tipo="TextBox" nombre="txtDesarrollador" texto=""
+				 x="200" y="120" width="550" height="25"/>
 
 
-	<!-- ===========================
-        4. PANEL CON CONTROLES ANIDADOS
-       =========================== -->
-	<Panel nombre="pnlOpciones" x="30" y="120" width="220" height="160" backColor="#FFF8D8">
+		<Control tipo="Label" nombre="lblPlataforma" texto="Plataforma:"
+				 x="40" y="160" width="140" height="25"/>
 
-		<Control tipo="Label" nombre="lblOpc" texto="Opciones del sistema"
-				 foreColor="#000000"
-				 x="30" y="20" width="160" height="30"/>
+		<Control tipo="TextBox" nombre="txtPlataforma" texto=""
+				 x="200" y="160" width="550" height="25"/>
 
-		<Control tipo="Button" nombre="btnExportar" texto="Exportar datos"
-				 x="30" y="70" width="150" height="30"/>
 
-		<Control tipo="Button" nombre="btnImportar" texto="Importar datos"
-				 x="30" y="110" width="150" height="30"/>
+		<Control tipo="Label" nombre="lblPrecio" texto="Precio:"
+				 x="40" y="200" width="140" height="25"/>
+
+		<Control tipo="TextBox" nombre="txtPrecio" texto=""
+				 x="200" y="200" width="550" height="25"/>
+
+
+
+
+
+		<!-- BOTONES -->
+		<Control tipo="Button" nombre="btnAñadir" texto="Añadir"
+				 x="180" y="230" width="110" height="35"/>
+		<Control tipo="Button" nombre="btnEditar" texto="Modificar"
+				 x="310" y="230" width="110" height="35"/>
+		<Control tipo="Button" nombre="btnEliminar" texto="Eliminar"
+				 x="440" y="230" width="110" height="35"/>
+
 	</Panel>
 
 
-
-	<!-- ===========================
-        5. LISTA — DATAGRIDVIEW
-       =========================== -->
-	<DataGrid nombre="tablaDatos" x="160" y="300" width="350" height="180">
-
+	<!-- TABLA -->
+	<DataGrid nombre="tablaDatos" x="40" y="380" width="820" height="190">
 		<Columna nombre="ID" width="50"/>
-		<Columna nombre="Nombre" width="150"/>
-		<Columna nombre="Edad" width="80"/>
-
-		<Fila>
-			<Celda columna="ID">1</Celda>
-			<Celda columna="Nombre">Pablo</Celda>
-			<Celda columna="Edad">21</Celda>
-		</Fila>
-
-		<Fila>
-			<Celda columna="ID">2</Celda>
-			<Celda columna="Nombre">Sandra</Celda>
-			<Celda columna="Edad">19</Celda>
-		</Fila>
-
+		<Columna nombre="Titulo" width="200"/>
+		<Columna nombre="Desarrollador" width="200"/>
+		<Columna nombre="Plataforma" width="200"/>
+		<Columna nombre="Precio" width="100"/>
 	</DataGrid>
 
 </Interfaz>
