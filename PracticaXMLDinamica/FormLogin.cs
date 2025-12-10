@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using PracticaXMLDinamica.Data;
 
 namespace PracticaXMLDinamica
 {
@@ -8,28 +10,26 @@ namespace PracticaXMLDinamica
     {
         public List<(string username, string password)> usuarios = new List<(string, string)>();
 
-        // Usuario simulado
-        private string userGuardado = "pablo";
-        private string passGuardada = "1234";
 
-        private int intentosFallidos = 0;
-        private const int MAX_INTENTOS = 3;
 
         public FormLogin()
         {
             InitializeComponent();
+            CargarFondo();
             CrearInterfaz();
 
-            // Usuario inicial
-            usuarios.Add((userGuardado, passGuardada));
-
-            // Centrado FINAL del login
+            // Cuando el formulario ya está pintado → centrar login
             this.Shown += (s, e) =>
             {
                 Panel panel = (Panel)this.Controls["panelLogin"];
                 CentrarLogin(panel);
             };
+
+            // Cuando el panel cambie de tamaño → recentrar
+            Panel p = (Panel)this.Controls["panelLogin"];
+            p.Resize += (s, e) => CentrarLogin(p);
         }
+
 
         // =====================================================================
         //   CREACIÓN DE INTERFAZ
@@ -59,8 +59,8 @@ namespace PracticaXMLDinamica
             // TÍTULO
             Label lblTitulo = new Label();
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Text = "Acceso al Sistema";
-            lblTitulo.ForeColor = Color.White;
+            lblTitulo.Text = "Login del Jugador Supremo";
+            lblTitulo.ForeColor = Color.AntiqueWhite;
             lblTitulo.Font = new Font("Segoe UI", 22, FontStyle.Bold);
             lblTitulo.AutoSize = true;
             panel.Controls.Add(lblTitulo);
@@ -68,7 +68,7 @@ namespace PracticaXMLDinamica
             // USER LABEL
             Label lblUser = new Label();
             lblUser.Name = "lblUser";
-            lblUser.Text = "User:";
+            lblUser.Text = "Nickname:";
             lblUser.ForeColor = Color.White;
             lblUser.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblUser.AutoSize = true;
@@ -83,7 +83,7 @@ namespace PracticaXMLDinamica
             // PASSWORD LABEL
             Label lblPass = new Label();
             lblPass.Name = "lblPass";
-            lblPass.Text = "Password:";
+            lblPass.Text = "Clave secreta:";
             lblPass.ForeColor = Color.White;
             lblPass.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblPass.AutoSize = true;
@@ -96,31 +96,103 @@ namespace PracticaXMLDinamica
             txtPass.Size = new Size(300, 30);
             panel.Controls.Add(txtPass);
 
-            // BOTÓN LOGIN
+            // ==========================
+            // Botón de inicio de sesión
+            // ==========================
+
             Button btnLogin = new Button();
             btnLogin.Name = "btnLogin";
             btnLogin.Text = "Iniciar Sesion";
             btnLogin.Size = new Size(150, 40);
-            btnLogin.BackColor = Color.FromArgb(200, 16, 46);
+
+            // 🔥 Estilo mejorado pero manteniendo tu estructura
+            btnLogin.BackColor = Color.Black;
             btnLogin.ForeColor = Color.White;
+
             btnLogin.FlatStyle = FlatStyle.Flat;
-            btnLogin.FlatAppearance.BorderSize = 2;
-            btnLogin.FlatAppearance.BorderColor = Color.FromArgb(0, 56, 168);
+            btnLogin.FlatAppearance.BorderSize = 2; // Borde gamer
+            btnLogin.FlatAppearance.BorderColor = Color.FromArgb(255, 60, 60); // Rojo neon suave
+
+            btnLogin.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            // Hover suave con glow (manteniendo tu lógica)
+            btnLogin.MouseEnter += (s, e) =>
+            {
+                btnLogin.BackColor = Color.FromArgb(35, 35, 35);
+                btnLogin.FlatAppearance.BorderColor = Color.FromArgb(255, 120, 120); // Glow aumentado
+            };
+
+            btnLogin.MouseLeave += (s, e) =>
+            {
+                btnLogin.BackColor = Color.Black;
+                btnLogin.FlatAppearance.BorderColor = Color.FromArgb(255, 60, 60);
+            };
+
             btnLogin.Click += BtnLogin_Click;
             panel.Controls.Add(btnLogin);
 
-            // BOTÓN NUEVO USUARIO
+
+
+            // ==========================
+            // Botón de nuevo usuario
+            // ==========================
+
             Button btnNuevo = new Button();
             btnNuevo.Name = "btnNuevo";
-            btnNuevo.Text = "Registrarse";
+            btnNuevo.Text = "Nuevo Usuario";
             btnNuevo.Size = new Size(150, 40);
-            btnNuevo.BackColor = Color.FromArgb(200, 16, 46);
+
+            // 🔥 Estilo mejorado igual que Login
+            btnNuevo.BackColor = Color.Black;
             btnNuevo.ForeColor = Color.White;
+
             btnNuevo.FlatStyle = FlatStyle.Flat;
             btnNuevo.FlatAppearance.BorderSize = 2;
-            btnNuevo.FlatAppearance.BorderColor = Color.FromArgb(0, 56, 168);
+            btnNuevo.FlatAppearance.BorderColor = Color.FromArgb(255, 60, 60);
+
+            btnNuevo.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            // Hover suave con glow
+            btnNuevo.MouseEnter += (s, e) =>
+            {
+                btnNuevo.BackColor = Color.FromArgb(35, 35, 35);
+                btnNuevo.FlatAppearance.BorderColor = Color.FromArgb(255, 120, 120);
+            };
+
+            btnNuevo.MouseLeave += (s, e) =>
+            {
+                btnNuevo.BackColor = Color.Black;
+                btnNuevo.FlatAppearance.BorderColor = Color.FromArgb(255, 60, 60);
+            };
+
             btnNuevo.Click += BtnNuevo_Click;
             panel.Controls.Add(btnNuevo);
+
+
+
+
+
+        }
+        private void CargarFondo()
+        {
+            try
+            {
+                string ruta = Path.Combine(Application.StartupPath, "Resources", "login.jpg");
+
+                if (File.Exists(ruta))
+                {
+                    this.BackgroundImage = Image.FromFile(ruta);
+                    this.BackgroundImageLayout = ImageLayout.Stretch;
+                }
+                else
+                {
+                    MessageBox.Show("⚠ No se encontró la imagen en:\n" + ruta);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("⚠ Error cargando fondo:\n\n" + ex.Message);
+            }
         }
 
         // =====================================================================
@@ -138,31 +210,50 @@ namespace PracticaXMLDinamica
 
             int centerX = panel.Width / 2;
 
-            // Título
+            // 👉 DESPLAZAMIENTO A LA DERECHA
+            int offsetX = 100;  // ← AJUSTA ESTE VALOR para moverlos más o menos
+
+            // ======================
+            //   TÍTULO centrado
+            // ======================
             lblTitulo.Left = centerX - lblTitulo.Width / 2;
             lblTitulo.Top = 40;
 
-            // User
-            txtUser.Left = centerX - txtUser.Width / 2;
-            txtUser.Top = 130;
+            // Distancia vertical entre los campos
+            int spacingY = 60;
+
+            // Posición inicial Y
+            int startY = 130;
+
+            // ======================
+            //   USER (centrado + desplazado a la derecha)
+            // ======================
+            txtUser.Left = centerX - txtUser.Width / 2 + offsetX;
+            txtUser.Top = startY;
 
             lblUser.Left = txtUser.Left - lblUser.Width - 15;
             lblUser.Top = txtUser.Top + 3;
 
-            // Password
-            txtPass.Left = centerX - txtPass.Width / 2;
-            txtPass.Top = 190;
+            // ======================
+            //   PASSWORD (igual desplazado)
+            // ======================
+            txtPass.Left = centerX - txtPass.Width / 2 + offsetX;
+            txtPass.Top = txtUser.Top + spacingY;
 
             lblPass.Left = txtPass.Left - lblPass.Width - 15;
             lblPass.Top = txtPass.Top + 3;
 
-            // Botones
-            btnLogin.Top = 270;
-            btnNuevo.Top = 270;
+            // ======================
+            //   BOTONES centrados
+            // ======================
+            btnLogin.Top = txtPass.Top + spacingY + 30;
+            btnNuevo.Top = btnLogin.Top;
 
             btnLogin.Left = centerX - btnLogin.Width - 10;
             btnNuevo.Left = centerX + 10;
         }
+
+
 
         // =====================================================================
         //   CLICK — NUEVO USUARIO
@@ -174,98 +265,88 @@ namespace PracticaXMLDinamica
         }
 
         // =====================================================================
-        //   CLICK — LOGIN
+        //   CLICK — LOGIN a Mysql 
         // =====================================================================
         private void BtnLogin_Click(object sender, EventArgs e)
         {
             Panel panel = (Panel)this.Controls["panelLogin"];
-
             TextBox user = (TextBox)panel.Controls["txtUser"];
             TextBox pass = (TextBox)panel.Controls["txtPass"];
 
             // VALIDACIÓN DE CAMPOS VACÍOS
             if (string.IsNullOrWhiteSpace(user.Text) || string.IsNullOrWhiteSpace(pass.Text))
             {
-                MessageBox.Show(
-      "📝 Por favor, introduzca el usuario y la contraseña antes de continuar.",
-      "Información",
-      MessageBoxButtons.OK,
-      MessageBoxIcon.None
-  );
-
-
+                MessageBox.Show("📝 Por favor, introduzca el usuario y la contraseña.");
                 return;
             }
 
-            // BUSCAR USUARIO EN LA LISTA (memoria)
-            var encontrado = usuarios.Find(u => u.username == user.Text);
+            // CONSULTA SQL PARA VERIFICAR USUARIO
+            string query = "SELECT * FROM Usuarios WHERE nombre_usuario=@user AND password=@pass";
 
-            // SI NO EXISTE → MENSAJE
-            if (encontrado.username == null)
+            using (MySqlConnection con = DatabaseHelper.GetConnection())
             {
-                MessageBox.Show(
-    "❌ El usuario introducido no existe.\n\n" +
-    "Verifique sus datos antes de continuar.",
-    "Error de autenticación",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Error
-);
-
-                return;
-            }
-
-            // SI EXISTE PERO CONTRASEÑA INCORRECTA
-            if (encontrado.password != pass.Text)
-            {
-                intentosFallidos++;
-
-                if (intentosFallidos >= MAX_INTENTOS)
+                // ❗ PRIMERA PROTECCIÓN: Si la conexión vino NULL
+                if (con == null)
                 {
-                    MessageBox.Show(
-     "⚠ Has alcanzado el número máximo de intentos.\n\n" +
-     "El usuario quedará bloqueado durante 8 segundos.",
-     "Usuario bloqueado",
-     MessageBoxButtons.OK,
-     MessageBoxIcon.Warning
- );
+                    MessageBox.Show("❌ No se pudo crear la conexión con MySQL.\n" +
+                                    "Revise el puerto, usuario, contraseña o el estado del servidor.",
+                                    "Error de conexión",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                    return;
+                }
 
-                    this.Enabled = false;
+                try
+                {
+                    // ❗ SEGUNDA PROTECCIÓN: Intentar abrir la conexión
+                    con.Open();
 
-                    System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-                    timer.Interval = 8000;
-                    timer.Tick += (s2, e2) =>
+                    MySqlCommand cmd = new MySqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@user", user.Text);
+                    cmd.Parameters.AddWithValue("@pass", pass.Text);
+
+                    MySqlDataReader rd = cmd.ExecuteReader();
+
+                    if (rd.HasRows)
                     {
-                        intentosFallidos = 0;
-                        this.Enabled = true;
-                        timer.Stop();
-                    };
-                    timer.Start();
+                        // LOGIN CORRECTO
+                        MessageBox.Show("✔ Inicio de sesión correcto\n\nBienvenido al sistema",
+                            "Autenticación exitosa",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
 
+                        Form1 home = new Form1();
+                        home.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        // LOGIN INCORRECTO
+                        MessageBox.Show("❌ Usuario o contraseña incorrectos.",
+                            "Error de autenticación",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
                 }
-                else
+                catch (MySqlException ex)
                 {
-                    MessageBox.Show(
-    " La contraseña introducida no es correcta.\n\nPor favor, inténtelo de nuevo.",
-    "Error de autenticación",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Error
-);
-
+                    // ❗ ERRORES DE MYSQL (puerto, usuario, contraseña, servidor apagado, etc.)
+                    MessageBox.Show("⚠ Error conectando a MySQL:\n\n" + ex.Message,
+                        "Error de MySQL",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                 }
-
-                return;
+                catch (Exception ex)
+                {
+                    // ❗ Errores generales
+                    MessageBox.Show("⚠ Error inesperado:\n\n" + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             }
 
-            // LOGIN CORRECTO
-            MessageBox.Show(
-    "✔ Inicio de sesión correcto\n\nBienvenido al sistema",
-    "Autenticación exitosa",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Information
-);
-            Form1 home = new Form1();
-            home.Show();
-            this.Hide();
         }
+
     }
 }

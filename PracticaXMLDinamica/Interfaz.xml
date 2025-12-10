@@ -1,21 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Interfaz>
 
-	<!-- MENÚ COMPLETO -->
+	<!-- MENÚ SUPERIOR -->
 	<MenuStrip nombre="menuPrincipal">
 
-		<!-- Archivo -->
-		<MenuItem texto="Archivo">
-			<MenuItem texto="Guardar" accion="guardar"/>
-			<MenuItem texto="Salir" accion="salir"/>
-		</MenuItem>
-
-		<!-- Ayuda -->
-		<MenuItem texto="Ayuda">
-			<MenuItem texto="Acerca de" accion="acerca"/>
-		</MenuItem>
-
-		<!-- Nuevas opciones de navegación -->
 		<MenuItem texto="TIENDA" accion="nav"/>
 		<MenuItem texto="COMUNIDAD" accion="nav"/>
 		<MenuItem texto="SOPORTE" accion="nav"/>
@@ -38,49 +26,36 @@
 		<Control tipo="Label" nombre="lblTitulo" texto="Gestión de Catálogo de Videojuegos"
 				 x="0" y="10" width="820" height="30"/>
 
-		<!-- CAMPOS ALINEADOS -->
-
+		<!-- CAMPOS -->
 		<Control tipo="Label" nombre="lblTituloJuego" texto="Título:"
 				 x="40" y="80" width="140" height="25"/>
-
 		<Control tipo="TextBox" nombre="txtTitulo" texto=""
 				 x="200" y="80" width="550" height="25"/>
 
-
 		<Control tipo="Label" nombre="lblDesarrollador" texto="Desarrollador:"
 				 x="40" y="120" width="140" height="25"/>
-
 		<Control tipo="TextBox" nombre="txtDesarrollador" texto=""
 				 x="200" y="120" width="550" height="25"/>
 
-
 		<Control tipo="Label" nombre="lblPlataforma" texto="Plataforma:"
 				 x="40" y="160" width="140" height="25"/>
-
 		<Control tipo="TextBox" nombre="txtPlataforma" texto=""
 				 x="200" y="160" width="550" height="25"/>
 
-
 		<Control tipo="Label" nombre="lblPrecio" texto="Precio:"
 				 x="40" y="200" width="140" height="25"/>
-
 		<Control tipo="TextBox" nombre="txtPrecio" texto=""
 				 x="200" y="200" width="550" height="25"/>
 
-
-
-
-
 		<!-- BOTONES -->
 		<Control tipo="Button" nombre="btnAñadir" texto="Añadir"
-				 x="180" y="230" width="110" height="35"/>
+				 x="180" y="245" width="110" height="35"/>
 		<Control tipo="Button" nombre="btnEditar" texto="Modificar"
-				 x="310" y="230" width="110" height="35"/>
+				 x="310" y="245" width="110" height="35"/>
 		<Control tipo="Button" nombre="btnEliminar" texto="Eliminar"
-				 x="440" y="230" width="110" height="35"/>
+				 x="440" y="245" width="110" height="35"/>
 
 	</Panel>
-
 
 	<!-- TABLA -->
 	<DataGrid nombre="tablaDatos" x="40" y="380" width="820" height="190">

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using PracticaXMLDinamica.Data;
+using System;
 using System.Windows.Forms;
+using System.IO; // importante
 
 namespace PracticaXMLDinamica
 {
@@ -7,12 +10,37 @@ namespace PracticaXMLDinamica
     {
         private FormLogin loginForm;
 
+
         public FormRegistro(FormLogin formLogin)
         {
             InitializeComponent();
             loginForm = formLogin;
+            CargarFondo();
             CrearInterfaz();
         }
+
+        private void CargarFondo()
+        {
+            try
+            {
+                string ruta = Path.Combine(Application.StartupPath, "Resources", "login.jpg");
+
+                if (File.Exists(ruta))
+                {
+                    this.BackgroundImage = Image.FromFile(ruta);
+                    this.BackgroundImageLayout = ImageLayout.Stretch;
+                }
+                else
+                {
+                    MessageBox.Show("⚠ No se encontró la imagen en:\n" + ruta);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("⚠ Error cargando fondo:\n\n" + ex.Message);
+            }
+        }
+
 
         private void CrearInterfaz()
         {
@@ -119,6 +147,7 @@ namespace PracticaXMLDinamica
                 string pass1 = txtPass1.Text;
                 string pass2 = txtPass2.Text;
 
+                // VALIDACIÓN DE CAMPOS
                 if (user == "" || pass1 == "" || pass2 == "")
                 {
                     MessageBox.Show("⚠ Rellene todos los campos.", "Campos vacíos",
@@ -133,23 +162,52 @@ namespace PracticaXMLDinamica
                     return;
                 }
 
-                // Comprobar si ya existe
-                foreach (var u in loginForm.usuarios)
+                try
                 {
-                    if (u.username == user)
+                    using (MySqlConnection con = DatabaseHelper.GetConnection())
                     {
-                        MessageBox.Show("❌ Ese usuario ya existe.", "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        con.Open();
+
+                        // 1️⃣ Comprobar si el usuario existe
+                        string checkQuery = "SELECT * FROM Usuarios WHERE nombre_usuario=@user";
+                        MySqlCommand checkCmd = new MySqlCommand(checkQuery, con);
+                        checkCmd.Parameters.AddWithValue("@user", user);
+
+                        MySqlDataReader reader = checkCmd.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            MessageBox.Show("❌ Ese usuario ya existe.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        reader.Close();
+
+                        // 2️⃣ Insertar el nuevo usuario
+                        string insertQuery =
+                            "INSERT INTO Usuarios (nombre_usuario, password) VALUES (@user, @pass)";
+                        MySqlCommand insertCmd = new MySqlCommand(insertQuery, con);
+                        insertCmd.Parameters.AddWithValue("@user", user);
+                        insertCmd.Parameters.AddWithValue("@pass", pass1);
+
+                        insertCmd.ExecuteNonQuery();
+
+                        MessageBox.Show("✔ Usuario registrado correctamente.", "Registro exitoso",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.Close();
                     }
                 }
-
-                loginForm.usuarios.Add((user, pass1));
-                MessageBox.Show("✔ Usuario registrado correctamente.", "Registro exitoso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                this.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show("⚠ Error conectando a MySQL:\n\n" + ex.Message,
+                        "Error de conexión",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
             };
+
 
             // AÑADIR TODO AL FORMULARIO
             this.Controls.Add(lblUser);
