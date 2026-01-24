@@ -5,7 +5,7 @@ namespace PracticaXMLDinamica.Data
     public class DatabaseHelper
     {
         private static readonly string connectionString =
-            "server=localhost;port=3306;database=login_db;uid=root;pwd=root;";
+            "server=localhost;port=3307;database=login_db;uid=root;pwd=root;";
 
         public static MySqlConnection GetConnection()
         {

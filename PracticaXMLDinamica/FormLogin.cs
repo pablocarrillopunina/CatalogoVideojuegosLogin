@@ -8,10 +8,11 @@ namespace PracticaXMLDinamica
 {
     public partial class FormLogin : Form
     {
+        public static string UsuarioLogueado;
+
         public List<(string username, string password)> usuarios = new List<(string, string)>();
 
-
-
+        
         public FormLogin()
         {
             InitializeComponent();
@@ -309,16 +310,42 @@ namespace PracticaXMLDinamica
 
                     if (rd.HasRows)
                     {
-                        // LOGIN CORRECTO
+                        rd.Read(); // Leemos la fila
+                        UsuarioLogueado = rd["nombre_usuario"].ToString();
+
+
+
+                        string rol = rd["rol"].ToString();
+                        string estado = rd["estado"].ToString();
+
+                        if (estado == "BANEADO")
+                        {
+                            MessageBox.Show("⛔ Este usuario está baneado y no puede acceder.",
+                                "Acceso denegado",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Stop);
+                            return;
+                        }
+
                         MessageBox.Show("✔ Inicio de sesión correcto\n\nBienvenido al sistema",
                             "Autenticación exitosa",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
 
-                        Form1 home = new Form1();
-                        home.Show();
+                        if (rol == "ADMIN")
+                        {
+                            FormAdmin admin = new FormAdmin(); // lo crearemos luego
+                            admin.Show();
+                        }
+                        else
+                        {
+                            Form1 home = new Form1(); // catálogo
+                            home.Show();
+                        }
+
                         this.Hide();
                     }
+
                     else
                     {
                         // LOGIN INCORRECTO

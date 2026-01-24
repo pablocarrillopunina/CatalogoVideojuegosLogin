@@ -16,6 +16,9 @@
     <Compile Update="Data\DatabaseHelper.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Update="FormAdmin.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="FormLogin.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
